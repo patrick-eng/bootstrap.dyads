@@ -1,0 +1,12 @@
+Package: bootstrap.dyads
+Type: Package
+Title: Running bootstrapped dyad-ratios algorithms
+Version: 0.1.0
+Author: Patrick English
+Maintainer: Patrick English <p.english@exeter.ac.uk>
+Description: Contains edited Stimson code for dyad-ratios estimations and adds functions for bootstrapping variable loading scores. This creates more robust and reliable estimations of item validity.
+Imports: ggplot2, rapportools
+License: MIT + file LICENCE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1.9000
