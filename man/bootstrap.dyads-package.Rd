@@ -4,10 +4,9 @@
 \name{bootstrap.dyads-package}
 \alias{bootstrap.dyads}
 \alias{bootstrap.dyads-package}
-\title{bootstrap.dyads: What the Package Does (Title Case)}
+\title{bootstrap.dyads: Running bootstrapped dyad-ratios algorithms}
 \description{
-More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Contains edited Stimson code for dyad-ratios estimations and adds functions for bootstrapping variable loading scores. This creates more robust and reliable estimations of item validity.
 }
 \details{
 This package provides a bootstrapped estimation for the variable `loading scores' estimated within the extract function of the R code for Professor James Stimson's dyad-ratios model.
