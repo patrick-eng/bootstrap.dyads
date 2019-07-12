@@ -23,7 +23,7 @@ This function runs the dyad-ratios bootstrap model, which takes the results of a
 
 The analysis function analyses the differences between the bootstrapped means and single-estimation means of variable loading scores and makes suggestions on which items ought to be dropped from the data for either lack of reliability (difference between loading estimations greater than user-defined or default max.diff) or passing below any substantive level of commonality with the main series (bootstrapped mean loading score below the user-defined or default threshold either on the positive or minus side of the scale).
 
-The model inherits all formula arguments from the original extract function output (pre-bootstrapping). 
+The model inherits all formula arguments from the original extract function output (pre-bootstrapping).
 
 Assigning the output to an object creates a list of ten items, including the most over-estimated and under-estimated loading scores according to the bootstrapping, a data-frame of suggested data input, the results of this suggested input when passed into the extract function, and a graph plotting the latent dimension estimated in the bootstrap-suggested data.
 }

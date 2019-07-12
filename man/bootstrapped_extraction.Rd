@@ -26,9 +26,9 @@ Runs bootstrap model for repeated estimation of variable loading scores in the d
 \details{
 This function runs the dyad-ratios bootstrap model, which takes the results of a single dyad-ratios estimation outcome and produces bootstrapped estimations of the variable loading scores.
 
-The bootstrap model removes a pre-defined proportion of random variables for each estimation, extracts the variable loading scores, and averages them across all trials. 
+The bootstrap model removes a pre-defined proportion of random variables for each estimation, extracts the variable loading scores, and averages them across all trials.
 
-The model inherits all formula arguments from the extract function output. 
+The model inherits all formula arguments from the extract function output.
 
 Assigning the output to an object creates a list of five items, including a dataframe called 'Full Results' which contrains the bootstrapped mean loading score, single-run estimated loading score, and the difference between the two for each variable input.
 
