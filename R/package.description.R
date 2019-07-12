@@ -7,7 +7,7 @@
 #'
 #' The bootstrapping deals with a potential problem in terms of item validity in which, on a single estimation of the model, each variable's validity is assumed to be equal to its common variance with the items around it. By randomising the items which appear around it in multiple replications, a much sterner test of the item's relationship with the latent concept is carried out which accounts for incidental, artefactual, and ultimately inaccurate reports of coveriance. It allows us to be more confident that the items selected actually, as individuals and the sum of their parts, connect to the latent concept estimated by the dyad-ratios calculator.
 #'
-#' Changes have been made to Stimson's original R code in order for the bootstrap model to be ran.
+#' Changes have been made to Stimson's original R code in order for the bootstrap model to be ran. This also requires some different approaches by the user. Most importantly, the data to be analysed needs to be specified as a seperate data and then character vector calls. E.g. data=data, varname="VARIABLE".
 #'
 #' Firstly, additional arguments have been added to the function itself including: data (define the object which holds the vectors), print (setting to FALSE allows the users to surpress all messages returned to the console), log (default is true, generates a log file containing diagnostic information onto the user's hard-drive), and filename (character vector for where the log should be written to, default is "dyad-ratios-log.txt" under the working directory).
 #'
