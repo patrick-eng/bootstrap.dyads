@@ -11,17 +11,17 @@
 #'
 #' @details This function runs the dyad-ratios bootstrap model, which takes the results of a single dyad-ratios estimation outcome and produces bootstrapped estimations of the variable loading scores.
 #'
-#' The bootstrap model removes a pre-defined proportion of random variables for each estimation, extracts the variable loading scores, and averages them across all trials.
+#' The bootstrap model removes a pre-defined proportion of random variables for each estimation, extracts the variable loading scores, and averages them across all trials to create bootstrapped-mean estimations of item validity.
 #'
-#' The model inherits all formula arguments from the extract function output.
+#' The model inherits all formula arguments from the extract function output. Note that the extract function must be as defined in this package code, not the original Extract.r.zip file hosted on Stimson's website.
 #'
-#' Assigning the output to an object creates a list of five items, including a dataframe called 'Full Results' which contrains the bootstrapped mean loading score, single-run estimated loading score, and the difference between the two for each variable input.
+#' Assigning the output to an object creates a list of five items, including a dataframe called 'Full Results' which contrains the bootstrapped mean loading score, single-run estimated loading score, and the difference between the two for each variable input. Larger figures indicate bigger over-estimation of the loading score in the single-run estimation (a lower bootstrapped mean).
 #'
 #' It is strongly suggested (but not essential) for the speed of the bootstrap estimation that the options print and log in the extract function (to produce the results object) are set to FALSE.
 #'
-#' @export bootstrapped_extraction
+#' @export bootstrapped.extraction
 
-bootstrapped_extraction <- function(data,reps=500,draw=0.1,varname,output,print=FALSE){
+bootstrapped.extraction <- function(data,reps=1000,draw=0.2,varname,output,print=FALSE){
 
   ### Work out the levels and lengths of objects, build base objects for later filling, assign call to object
 
@@ -112,6 +112,8 @@ bootstrapped_extraction <- function(data,reps=500,draw=0.1,varname,output,print=
   ## find means
   loadings$mean <- rowMeans(loadings[,2:length(loadings)], na.rm=TRUE)
 
+  loads2 <- as.matrix(loadings[,2:length(loadings)])
+  loadings$sd <- matrixStats::rowSds(loads2, na.rm=TRUE)
 
   ## extract full results
   results_full <- as.data.frame(cbind(output[["varname"]], output[["loadings1"]]))
@@ -129,9 +131,9 @@ bootstrapped_extraction <- function(data,reps=500,draw=0.1,varname,output,print=
   loadings$Difference <- loadings$FullDataScore-loadings$mean
 
   ## Subset to summarisable object
-  FullResults <- loadings[,c("Variable", "mean", "FullDataScore", "Difference")]
+  FullResults <- loadings[,c("Variable", "mean", "sd", "FullDataScore", "Difference")]
 
-  names(FullResults) <- c("Variable", "Bootstrapped Mean", "Single-Run Estimate", "Difference")
+  names(FullResults) <- c("Variable", "Bootstrapped Mean", "Standard Deviation", "Single-Run Estimate", "Difference")
 
   FullResults <- FullResults[order(FullResults$`Bootstrapped Mean`, decreasing=TRUE),]
 

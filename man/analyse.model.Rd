@@ -4,7 +4,8 @@
 \alias{analyse.model}
 \title{Analysis of bootstrapped dyad-ratios loading scores}
 \usage{
-analyse.model(model, max.diff = 0.1, threshold = 0.4, print = TRUE)
+analyse.model(model, max.diff = 0.05, threshold = 0.3, sd.cut = 0.2,
+  print = TRUE)
 }
 \arguments{
 \item{model}{Define the name of the object in which bootstrap results are stored.}
@@ -19,11 +20,11 @@ analyse.model(model, max.diff = 0.1, threshold = 0.4, print = TRUE)
 Runs post-hoc analysis of bootstrapped dyad-ratios model to identify poorly-fitting and unreliable variable items and fit a bootstrap-suggested dyad-ratios model.
 }
 \details{
-This function runs the dyad-ratios bootstrap model, which takes the results of a single dyad-ratios estimation outcome and produces bootstrapped estimations of the variable loading scores.
+This function runs analysis of the outputs from the dyad-ratios bootstrap model, which takes the results of a single dyad-ratios estimation outcome and produces bootstrapped estimations of the variable loading scores.
 
 The analysis function analyses the differences between the bootstrapped means and single-estimation means of variable loading scores and makes suggestions on which items ought to be dropped from the data for either lack of reliability (difference between loading estimations greater than user-defined or default max.diff) or passing below any substantive level of commonality with the main series (bootstrapped mean loading score below the user-defined or default threshold either on the positive or minus side of the scale).
 
-The model inherits all formula arguments from the original extract function output (pre-bootstrapping).
+The model inherits formula arguments from the original extract function output (pre-bootstrapping) and data from the output of the bootstrap model.
 
-Assigning the output to an object creates a list of ten items, including the most over-estimated and under-estimated loading scores according to the bootstrapping, a data-frame of suggested data input, the results of this suggested input when passed into the extract function, and a graph plotting the latent dimension estimated in the bootstrap-suggested data.
+Assigning the output to an object creates a list of nine items, including the most over-estimated and under-estimated loading scores according to the bootstrapping, a data-frame of suggested data input, the results of this suggested input when passed into the extract function, and a graph plotting the latent dimension estimated in the bootstrap-suggested data.
 }

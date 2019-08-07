@@ -10,9 +10,9 @@
 #'
 #' Sigificant changes have been made to the extract function (non-calculation elements) which are documented in the main package documentation.
 #'
-#' @export call_dr_code
+#' @export call.dr.code
 
-call_dr_code <- function(filepath="load_functions.R"){
+call.dr.code <- function(filepath="load_functions.R"){
 
   source(filepath)
 

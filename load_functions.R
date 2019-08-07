@@ -1,6 +1,6 @@
 #' Dyad-Ratios Functions for assignment into Global Environment
 #'
-#' Storage for Stimson functions, with significant changes and bug fix within the extract function.
+#' Storage for Stimson functions, with significant changes and bug fixes within the extract and aggregate functions.
 #'
 #' No arguments or functions to call, assigned to environment using the call_dr_code command.
 
@@ -105,7 +105,7 @@
     findmonth<-as.integer(v[5])+1
   } #end findmonth
   ##########################################################################################
-  findyear<-function(DateVar) {
+  findyear<<-function(DateVar) {
     z<-as.POSIXlt(DateVar)
     v<-unlist(z)
     findyear<-as.integer(v[6])+1900
@@ -150,12 +150,14 @@
         } #end if
         if (firstcase == FALSE) { #skip over the rest for first good case
           per<- findper(unit,curdate,mind,miny,minper,aggratio) #here we translate date into agg category
+
           if ((varname[record] !=  lv) || (per !=lp)) { #found a new period or variable name
             if (lp > 0 &&  lp <= nperiods) {
               Mat.Issue[lp, v] <- x / c #recompute for either period or var change
               x<- 0
               c<- 0
             }
+
             if (varname[record] !=  lv) { #new var only
               for (i in 1:nvar) {
                 if (varname[record]==vlev[i]) v=i #determine v by matching to position of labels vector
@@ -166,10 +168,21 @@
             lp <- findper(unit,curdate,mind,miny,minper,aggratio)
             x <- index[record] * ncases[record] #start new sums for current case
             c <- ncases[record]
+
           } else {
             x<- x + index[record] * ncases[record] #a continuing case, increment sums
             c<- c + ncases[record]
           }
+
+          ## P. English added code to make sure that final record is recorded into the issue matrix
+
+          if(record==nrec){
+
+            Mat.Issue[lp, v] <- x / c #recompute for either period or var change
+
+          }
+
+
         } # end of first case special loop
       } #end of date test loop
     } #newrec: next record
@@ -179,7 +192,7 @@
   } #end aggregate function
   ##########################################################################################
 
-  esmooth<- function(mood, fb, alpha){
+  esmooth<- function(mood, fb, alpha, increase){
     ##########################################################################################
     smooth<- function(alpha) { #for time series "series" and alpha "alpha[1]" compute sum of squared forecast error
       ferror<- numeric(1)
@@ -198,8 +211,19 @@
     } # END OF FUNCTION SMOOTH
     ##########################################################################################
 
+    ## P. English added code to enable heavier smoother
+    # also added increase arguement to dominate, esmooth, and extract functions
+
+    if(increase==TRUE){
+      smoothf=0.4
+    }
+
+    if(increase==FALSE){
+      smoothf=1
+    }
+
     series<- mood[fb,] #create series to be smoothed
-    sm.out<- optim(c(.75),smooth,method="L-BFGS-B",lower=0.5,upper=1)  #call smoother
+    sm.out<- optim(c(.75),smooth,method="L-BFGS-B",lower=0.3,upper=smoothf)  #call smoother, with added functionality (PE)
     alpha<- sm.out$par                          #assign result to alpha
     #NOW SMOOTH USING ALPHA
     T<- length(series)
@@ -209,7 +233,8 @@
     return(alpha)
   } #END OF FUNCTION ESMOOTH
   ##########################################################################################
-  residmi<- function(issue,v,mood) { #function regresses issue(v) on mood and then residualizes it
+
+  residmi<<- function(issue,v,mood) { #function regresses issue(v) on mood and then residualizes it
     o<- lm(issue[,v] ~ mood[3,]) #regress issue on mood to get a,b
     issue[,v]<- 100 + issue[,v] - (o$coef[1]+o$coef[2]*mood[3,]) #100 + Y - (a+bx)
     return(issue[,v])
@@ -226,7 +251,7 @@
     return(Rvector)
   } #end function iscorr
   ##########################################################################################
-  dominate<- function(fb,issue,nperiods,nvar,mood,valid,smoothing,alpha) {
+  dominate<- function(fb,issue,nperiods,nvar,mood,valid,smoothing,alpha,increase) {
     nitems<- numeric(nperiods)
     if (fb==2) alpha1<-alpha
     if (fb==1) {
@@ -287,7 +312,7 @@
       jprev <- j #last value of j, whether lead or lag
     } #next j
     if (smoothing == TRUE) {
-      alpha<- esmooth(mood, fb, alpha)     #NOW SMOOTH USING ALPHA
+      alpha<- esmooth(mood, fb, alpha, increase)     #NOW SMOOTH USING ALPHA
       mood.sm<- mood[fb,] #set up alternate vector mood.sm
       for (t in 2:nperiods) {
         mood.sm[t]<- alpha*mood[fb,t]+(1-alpha)*mood.sm[t-1]
@@ -314,7 +339,7 @@
   ##########################################################################################
   ## MAIN EXTRACT CODE BEGINS HERE #########################################################
   extract<- function(data,varname,date,index,ncases=NULL,unit="A",mult=1,begindt=NA,enddt=NA,
-                     npass=1,smoothing=TRUE,endmonth=12,print=TRUE,log=TRUE,filename="dyad-ratios-log.txt") {
+                     npass=1,smoothing=TRUE,endmonth=12,print=TRUE,log=TRUE,filename="dyad-ratios-log.txt",increase=FALSE) {
 
     # P.English edits to add data and print calls for bootstrap model
 
@@ -508,7 +533,7 @@
       for(i in 1:nrow(issue)){
         p <- table(is.na(issue[i,]))
         k <- as.numeric(p[1])
-        if(k==nvar){
+        if(k==nvar & is.na(issue[i,1])){
           k <- 0
         }
         freqs$count[i] <- k
@@ -573,7 +598,7 @@
         while (iter == 0 || converge > tola) {   #MASTER CONTROL LOOP WHICH ITERATES UNTIL SOLUTION REACHED
 
           for (fb in 1:2) { #    MASTER fb LOOP       fb=1 is forward, 2 backward
-            dominate.out<- dominate(fb,issue,nperiods,nvar,mood,valid,smoothing,alpha)  #master estimation routine
+            dominate.out<- dominate(fb,issue,nperiods,nvar,mood,valid,smoothing,alpha,increase)  #master estimation routine
             alpha1<- dominate.out$alpha1
             alpha<- dominate.out$alpha
             mood[fb,]<- dominate.out$latent
@@ -754,6 +779,8 @@
 
       extract.out[["Loadings Table"]] <- loadings
       # P. English added loadings object to list
+      extract.out[["Eigenvalue estimate"]] <- round(100 * expprop,2)
+      # P. English added eigenvalue estimate object to list
 
       if(log==TRUE){
 
@@ -980,10 +1007,10 @@
       ### P. English added code to extract number of observations per time period
       freqs <- as.data.frame(period)
 
-      for(i in 1:ncol(issue)){
+      for(i in 1:nrow(issue)){
         p <- table(is.na(issue[i,]))
         k <- as.numeric(p[1])
-        if(k==nvar){
+        if(k==nvar & is.na(issue[i,1])){
           k <- 0
         }
         freqs$count[i] <- k
@@ -1046,7 +1073,7 @@
         while (iter == 0 || converge > tola) {   #MASTER CONTROL LOOP WHICH ITERATES UNTIL SOLUTION REACHED
 
           for (fb in 1:2) { #    MASTER fb LOOP       fb=1 is forward, 2 backward
-            dominate.out<- dominate(fb,issue,nperiods,nvar,mood,valid,smoothing,alpha)  #master estimation routine
+            dominate.out<- dominate(fb,issue,nperiods,nvar,mood,valid,smoothing,alpha,increase)  #master estimation routine
             alpha1<- dominate.out$alpha1
             alpha<- dominate.out$alpha
             mood[fb,]<- dominate.out$latent
@@ -1211,6 +1238,8 @@
 
       extract.out[["Loadings Table"]] <- loadings
       # P. English added loadings object to list
+      extract.out[["Eigenvalue estimate"]] <- round(100 * expprop,2)
+      # P. English added eigenvalue estimate object to list
 
       if(log==TRUE){
 
