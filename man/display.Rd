@@ -7,7 +7,7 @@
 display(out, filename = NULL)
 }
 \description{
-Storage for Stimson functions, with significant changes and bug fix within the extract function.
+Storage for Stimson functions, with significant changes and bug fixes within the extract and aggregate functions.
 }
 \details{
 No arguments or functions to call, assigned to environment using the call_dr_code command.

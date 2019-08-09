@@ -4,7 +4,7 @@
 \alias{bootstrapped.extraction}
 \title{Bootstrap model for the Stimson dyad ratios algorithm.}
 \usage{
-bootstrapped.extraction(data, reps = 1000, draw = 0.2, varname, output,
+bootstrapped.extraction(data, reps = 500, draw = 0.25, varname, output,
   print = FALSE)
 }
 \arguments{

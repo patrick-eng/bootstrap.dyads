@@ -21,7 +21,7 @@
 #'
 #' @export bootstrapped.extraction
 
-bootstrapped.extraction <- function(data,reps=1000,draw=0.2,varname,output,print=FALSE){
+bootstrapped.extraction <- function(data,reps=500,draw=0.25,varname,output,print=FALSE){
 
   ### Work out the levels and lengths of objects, build base objects for later filling, assign call to object
 

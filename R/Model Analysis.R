@@ -111,7 +111,7 @@ analyse.model <- function(model, max.diff=0.05, threshold=0.3, sd.cut=0.2, print
     AList[["Bootstrap Model Suggested Latent Dimension"]] <- BootResult$latent1
 
     AList[["Suggested Items to Drop"]] <- as.character(
-      bootstraps$`Full Results`$Variable[(results$`Bootstrapped Mean` < threshold
+      model$`Full Results`$Variable[(results$`Bootstrapped Mean` < threshold
                                           | results$`Bootstrapped Mean` < (threshold*-1)
                                           | results$Difference > max.diff
                                           | results$`Standard Deviation` > sd.cut)])
@@ -125,8 +125,11 @@ analyse.model <- function(model, max.diff=0.05, threshold=0.3, sd.cut=0.2, print
       cat(paste("Difference in means:", round(AList$`Mean Difference`, 2), '\n'))
       cat("")
       cat(paste("Suggested items to drop:", '\n'))
-      ifelse(rapportools::is.empty(AList[["Suggested Items to Drop"]])==TRUE, cat("None"),
-             print(AList[["Suggested Items to Drop"]]))
+      if(rapportools::is.empty(AList[["Suggested Items to Drop"]][1])){
+        cat(paste("None", '\n'))
+        } else {
+             print(AList[["Suggested Items to Drop"]])
+        }
       cat("", '\n')
       cat("Most Problematic Items:", '\n', '\n')
       print(AList[["Problematic Items"]])

@@ -1,5 +1,6 @@
-#' @import rapportools
-#' @import ggplot2 matrixStats
+#' @importFrom rapportools is.empty
+#' @importFrom matrixStats rowSds
+#' @import ggplot2
 #'
 #' @details This package provides a bootstrapped estimation for the variable `loading scores' estimated within the extract function of the R code for Professor James Stimson's dyad-ratios model.
 #'
