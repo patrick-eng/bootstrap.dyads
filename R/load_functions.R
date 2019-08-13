@@ -111,7 +111,7 @@
     findyear<-as.integer(v[6])+1900
   } #end findyear
   ##########################################################################################
-  aggregate<- function(varname,date,index,ncases,mindate,maxdate,nperiods,nvar,aggratio,unit,miny,minper) {   #
+  aggregate <- function(varname,date,index,ncases,mindate,maxdate,nperiods,nvar,aggratio,unit,miny,minper) {   #
     #READ A NEW RECORD, CALCULATE PERIOD, AND SET UP AGGREGATION INTO MAT.ISSUE[NPERIODS,NVAR]
     vl<- character(nvar)
     mind<- as.integer(mindate)/86400
@@ -127,18 +127,40 @@
     c<- 0
     nkeep<- 0
     lv<- "0"
+
+    ncases[ncases == 0] <- 1000
+    ncases[is.na(ncases)] <- 1000
+    # P. English moved ncases overwrite to outside of loop
+
+
     for (record in 1:nrec) { # MASTER LOOP THROUGH INPUT DATA, 1 TO NREC
-      if (ncases[record] == 0 || is.na(ncases[record])) ncases[record] <- 1000
       mo <- findmonth(date[record])
       qu <- 1 + as.integer((mo - 1)/3)
       dy <- findday(date[record])
       yr <- findyear(date[record])
-      curdate<- as.integer(date[record])
+
+      # P. English added code to force curdate to quartlerly formats for unit==Q
+      if(unit=="Q"){
+
+        if(dy > 28){
+          dy = 28
+        }
+
+        quarter_date <- ISOdate(yr,qu,dy,0,0,0,tz="GMT")
+        curdate <- as.integer(quarter_date)/86400
+
+      } else {
+
+        curdate<- as.integer(date[record])
+
+      }
+
+
       if (curdate >= mind &  curdate <= maxd) {  #is date within range?
         nkeep <- nkeep + 1
         if (nkeep==1) { #startup routine for first good case
           firstcase<- TRUE
-          lp <- findper(unit,curdate,mind,miny,minper,aggratio)
+          lp <- findper(unit,curdate=as.integer(date[record]),mind,miny,minper,aggratio) # P. English added code here and in other findper to search for period in original record date
           lv <- varname[record]
           x <- index[record] * ncases[record] #start new sums for case 1
           c <- ncases[record]
@@ -149,8 +171,7 @@
           firstcase<- FALSE
         } #end if
         if (firstcase == FALSE) { #skip over the rest for first good case
-          per<- findper(unit,curdate,mind,miny,minper,aggratio) #here we translate date into agg category
-
+          per<- findper(unit,curdate=as.integer(date[record]),mind,miny,minper,aggratio) #here we translate date into agg category # P. English added code here and in other findper to search for period in original record date
           if ((varname[record] !=  lv) || (per !=lp)) { #found a new period or variable name
             if (lp > 0 &&  lp <= nperiods) {
               Mat.Issue[lp, v] <- x / c #recompute for either period or var change
@@ -162,10 +183,10 @@
               for (i in 1:nvar) {
                 if (varname[record]==vlev[i]) v=i #determine v by matching to position of labels vector
               } #end for
-              vl[v]<- varname[record] #this will only catch names that have good cases
+              vl[v]<- as.character(varname[record]) #this will only catch names that have good cases - P. English added as.character() fix
               lv<-vl[v]  #reassign new varname to lastvar
             } # new var
-            lp <- findper(unit,curdate,mind,miny,minper,aggratio)
+            lp <- findper(unit,curdate=as.integer(date[record]),mind,miny,minper,aggratio) # P. English added code here and in other findper to search for period in original record date
             x <- index[record] * ncases[record] #start new sums for current case
             c <- ncases[record]
 
@@ -175,13 +196,11 @@
           }
 
           ## P. English added code to make sure that final record is recorded into the issue matrix
-
           if(record==nrec){
 
             Mat.Issue[lp, v] <- x / c #recompute for either period or var change
 
           }
-
 
         } # end of first case special loop
       } #end of date test loop
@@ -189,7 +208,8 @@
     vl<- vlev #overwrite previous assignment which had good names only
     agglist<- list(lab=vl,iss=Mat.Issue)
     return(agglist) #list includes labels and issue matrix
-  } #end aggregate function
+  }
+
   ##########################################################################################
 
   esmooth<- function(mood, fb, alpha, increase){
@@ -377,17 +397,18 @@
         minper<- as.integer((minper-1)/3)+1
         maxper<- as.integer((maxper-1)/3)+1
 
+        ## P. English added code to force maxday to 28 if higher than 28, or 2nd and 3rd quarters will not generate a curdate
+        ## P. English added code to set minday to first in the quarter, or else observations in earlier days but later months of same quarter are omitted
 
-        if(minday > 28){
-          minday = 28
-        }
+        minday = 1
+
         if(maxday > 28){
           maxday = 28
         }
 
-
       }
-      mindate<- ISOdate(miny,minper,minday,0,0,0,tz="GMT")
+
+      mindate<- ISOdate(miny, minper,minday,0,0,0,tz="GMT")
       maxdate<- ISOdate(maxy, maxper, maxday,0,0,0,tz="GMT") #86400=24*60*60
 
       #SETCONS:
@@ -854,10 +875,8 @@
         minper<- as.integer((minper-1)/3)+1
         maxper<- as.integer((maxper-1)/3)+1
 
+        minday = 1
 
-        if(minday > 28){
-          minday = 28
-        }
         if(maxday > 28){
           maxday = 28
         }

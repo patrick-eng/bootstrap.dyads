@@ -15,7 +15,7 @@ Collects and assigns functions required to run the Stimson dyad-ratios model.
 \details{
 Simple function to source and assign all dyad-ratios model functions into the global environment.
 
-Takes filepath argument, which by default looks in the same folder for load_functions.R.
+Takes filepath argument, which by default looks in the working directory.
 
 Sigificant changes have been made to the extract function (non-calculation elements) which are documented in the main package documentation.
 }
