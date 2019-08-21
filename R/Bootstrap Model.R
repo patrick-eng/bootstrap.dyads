@@ -4,7 +4,7 @@
 #'
 #' @param data Define the data
 #' @param reps Define number of bootstrapped replications. Default is 500.
-#' @param draw Define the proportion of items to be dropped in each bootstrap replication. Default is 0.1.
+#' @param draw Define the proportion of items to be dropped in each bootstrap replication. Default is 0.3.
 #' @param varname Define the variable name indicating the input series (as in extract function)
 #' @param output Define the object name that extract function results are stores in.
 #' @param print Logical. Define whether or not the function should display active count of replication progress in the console.
@@ -21,7 +21,7 @@
 #'
 #' @export bootstrapped.extraction
 
-bootstrapped.extraction <- function(data,reps=500,draw=0.25,varname,output,print=FALSE){
+bootstrapped.extraction <- function(data,reps=500,draw=0.3,varname,output,print=FALSE){
 
   ### Work out the levels and lengths of objects, build base objects for later filling, assign call to object
 

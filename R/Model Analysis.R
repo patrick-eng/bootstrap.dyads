@@ -3,8 +3,9 @@
 #' Runs post-hoc analysis of bootstrapped dyad-ratios model to identify poorly-fitting and unreliable variable items and fit a bootstrap-suggested dyad-ratios model.
 #'
 #' @param model Define the name of the object in which bootstrap results are stored.
-#' @param max.diff Define the maximum acceptable difference between single-estimated and bootstrapped mean loading scores for items to be passed into the final model. Default is 0.1.
-#' @param threshold Define the lower limit of bootstrapped loading scores for items to be passed into the final model. Default is 0.4.
+#' @param max.diff Define the maximum acceptable difference between single-estimated and bootstrapped mean loading scores for items to be passed into the final model. Default is 0.05.
+#' @param threshold Define the lower limit of bootstrapped loading scores for items to be passed into the final model. Default is 0.3.
+#' @param sd.cut Define the maximum acceptable standard deviation of the bootstrapped-mean estimate in order for a variable to be passed into the final model. Default is 0.2
 #' @param print Logical. Define whether summary of analysis should be returned to the console.
 #'
 #' @details This function runs analysis of the outputs from the dyad-ratios bootstrap model, which takes the results of a single dyad-ratios estimation outcome and produces bootstrapped estimations of the variable loading scores.
@@ -106,7 +107,7 @@ analyse.model <- function(model, max.diff=0.05, threshold=0.3, sd.cut=0.2, print
 
     AList[["Graph"]] <- EstGraph
 
-    AList[["Mean Difference"]] <- mean(output[["latent1"]]) -  mean(BootResult[["latent1"]])
+    AList[["Mean Difference"]] <- mean(BootResult[["latent1"]]) - mean(output[["latent1"]])
 
     AList[["Bootstrap Model Suggested Latent Dimension"]] <- BootResult$latent1
 

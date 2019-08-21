@@ -4,7 +4,7 @@
 \alias{bootstrapped.extraction}
 \title{Bootstrap model for the Stimson dyad ratios algorithm.}
 \usage{
-bootstrapped.extraction(data, reps = 500, draw = 0.25, varname, output,
+bootstrapped.extraction(data, reps = 500, draw = 0.3, varname, output,
   print = FALSE)
 }
 \arguments{
@@ -12,7 +12,7 @@ bootstrapped.extraction(data, reps = 500, draw = 0.25, varname, output,
 
 \item{reps}{Define number of bootstrapped replications. Default is 500.}
 
-\item{draw}{Define the proportion of items to be dropped in each bootstrap replication. Default is 0.1.}
+\item{draw}{Define the proportion of items to be dropped in each bootstrap replication. Default is 0.3.}
 
 \item{varname}{Define the variable name indicating the input series (as in extract function)}
 

@@ -10,9 +10,11 @@ analyse.model(model, max.diff = 0.05, threshold = 0.3, sd.cut = 0.2,
 \arguments{
 \item{model}{Define the name of the object in which bootstrap results are stored.}
 
-\item{max.diff}{Define the maximum acceptable difference between single-estimated and bootstrapped mean loading scores for items to be passed into the final model. Default is 0.1.}
+\item{max.diff}{Define the maximum acceptable difference between single-estimated and bootstrapped mean loading scores for items to be passed into the final model. Default is 0.05.}
 
-\item{threshold}{Define the lower limit of bootstrapped loading scores for items to be passed into the final model. Default is 0.4.}
+\item{threshold}{Define the lower limit of bootstrapped loading scores for items to be passed into the final model. Default is 0.3.}
+
+\item{sd.cut}{Define the maximum acceptable standard deviation of the bootstrapped-mean estimate in order for a variable to be passed into the final model. Default is 0.2}
 
 \item{print}{Logical. Define whether summary of analysis should be returned to the console.}
 }

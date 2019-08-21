@@ -875,10 +875,12 @@
         minper<- as.integer((minper-1)/3)+1
         maxper<- as.integer((maxper-1)/3)+1
 
+        ## P. English added code to force maxday to 28 if higher than 28, or 2nd and 3rd quarters will not generate a curdate
+        ## P. English added code to set minday to first in the quarter, or else observations in earlier days but later months of same quarter are omitted
 
-        if(minday > 28){
-          minday = 28
-        }
+
+        minday = 1
+
         if(maxday > 28){
           maxday = 28
         }
