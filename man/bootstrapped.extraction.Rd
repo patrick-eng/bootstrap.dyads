@@ -8,7 +8,7 @@ bootstrapped.extraction(data, reps = 500, draw = 0.3, varname, output,
   print = FALSE)
 }
 \arguments{
-\item{data}{Define the data}
+\item{data}{Define the data. Must be a dataframe or coercible object.}
 
 \item{reps}{Define number of bootstrapped replications. Default is 500.}
 
