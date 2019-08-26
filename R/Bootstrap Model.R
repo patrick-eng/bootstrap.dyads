@@ -2,7 +2,7 @@
 #'
 #' Runs bootstrap model for repeated estimation of variable loading scores in the dyad-ratios algorithm.
 #'
-#' @param data Define the data
+#' @param data Define the data. Must be a dataframe or coercible object.
 #' @param reps Define number of bootstrapped replications. Default is 500.
 #' @param draw Define the proportion of items to be dropped in each bootstrap replication. Default is 0.3.
 #' @param varname Define the variable name indicating the input series (as in extract function)
@@ -27,7 +27,9 @@ bootstrapped.extraction <- function(data,reps=500,draw=0.3,varname,output,print=
 
   set.seed(12345)
 
-  d <- data
+  d <- as.data.frame(data)
+
+  d[,varname] <- as.factor(d[,varname])
 
   items <- levels(d[,varname])
 
