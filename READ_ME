@@ -1,0 +1,21 @@
+Read me file for help installing and using bootstrap.dyads R package.
+
+Users can install this package using the devtools install_github() command:
+
+devtools::install_github("patrick-eng/bootstrap.dyads")
+
+Users will also need to download the Stimson function codes from this repository, and save the file in an apprproiate working directory. These functions are very similar to Stimson's original codes, but with extra added functionality, reporting objects, and some bug fixes. As a standalone, the extract() function in this packages provides a significant improvement on the original code (even if users do not then wish to use the bootstrapper).
+
+The call.dr.code() will source and load the functions into the user's global environment when provided with its filepath. For example: 
+
+call.dr.code("/Users/patrickenglish/Documents/bootstrap.dyads/load_functions.R")
+
+After this, the package operates just like any other. 
+
+Three functions provide all the mechanics.
+
+extract() will run a single estimation of the dyad-ratios algorithm. It is recommended for the 
+
+bootstrapped.extraction() will inherrit the object created by the extract function and run the bootstrapped analysis of factor loading scores. 
+
+analyse.model() will in turn inherrit the object created by the bootstrapped.extraction() function and analyse the results. The analysis provides suggestions and guides as to which items ought to be dropped from the public opinion sample, but users ultimately should make these decisions themselves based on their reading of the tables and other statistics provided in the analyse.model() generated object.
